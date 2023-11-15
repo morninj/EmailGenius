@@ -22,7 +22,8 @@ $(() => {
      */
     listenForGmailComposeArea();
 
-    /** Grab and save the Chrome extension token from the EmailGenius dashboard;
+    /**
+     * Grab and save the Chrome extension token from the EmailGenius website;
      * this also runs continuously in the background
      */
     await listenForTokenActions();
