@@ -1,0 +1,352 @@
+.eg-compose-container {
+  margin: 20px 0 15px 0;
+}
+
+.eg-compose-container-reply {
+  margin: 0 15px 15px 15px;
+}
+
+.eg-status-message-container {
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+.eg-status-message {
+  border: 1px;
+  border-radius: 10px;
+  flex-grow: 1;
+  margin: 0 0 20px 0;
+  padding: 12px 50px 12px 12px;
+  position: relative;
+}
+
+.eg-info-message {
+  background-color: #e7f3fe;
+  border-color: #1d65cc;
+  color: #1d65cc;
+}
+
+.eg-warning-message {
+  background-color: #fff9e7;
+  border-color: #f9a825;
+  color: #f9a825;
+}
+
+.eg-error-message {
+  background-color: #ffe7e7;
+  border-color: #e53935;
+  color: #e53935;
+}
+
+.eg-welcome-message {
+  background-color: #e7f9e7;
+  border-color: #1d8533;
+  color: #1d8533;
+}
+
+.eg-close-message {
+  color: #999;
+  cursor: pointer;
+  font-size: 12px;
+  font-weight: bold;
+  position: absolute;
+  right: 15px;
+  top: 13px;
+}
+
+.eg-buttons-bar {
+  background-color: #f4f5fc;
+  border-radius: 22px;
+  color: #454746;
+  display: flex;
+  justify-content: space-between;
+  min-height: 36px;
+  padding: 6px;
+}
+
+.eg-buttons-bar-minimized {
+  display: none;
+  height: 48px;
+  text-align: center;
+  width: 48px;
+}
+
+.eg-buttons-bar-minimized-visible {
+  display: inline-block;
+  padding: 0;
+}
+
+.eg-buttons-bar-minimized-visible i {
+  margin: 16px 0 0 0;
+  padding: 0;
+}
+
+.eg-buttons-bar-preview {
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+.eg-buttons-left {
+  flex-grow: 1;
+}
+
+.eg-buttons-right {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 0;
+}
+
+.eg-buttons-right .eg-button {
+  margin-left: 5px;
+  margin-right: 0;
+}
+
+.eg-button {
+  border-radius: 18px;
+  cursor: pointer;
+  display: inline-block;
+  font-family: 'Google Sans', Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 36px;
+  padding-bottom: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 0;
+  position: relative;
+  text-align: center;
+}
+
+.eg-button:hover {
+  background-color: #e7e9ee;
+}
+
+.eg-button-icon {
+  margin-right: 10px;
+}
+
+.eg-button-separator {
+  color: #dddddd;
+  margin: 0 3px;
+}
+
+.no-hover:hover {
+  background: none !important;
+  cursor: pointer;
+}
+
+.eg-generate-input-container,
+.eg-edit-input-container {
+  display: flex;
+  flex-grow: 1;
+}
+
+.eg-wand {
+  cursor: pointer;
+  margin: 10px;
+}
+
+.eg-wand:hover {
+  opacity: 0.8;
+}
+
+.eg-input {
+  background-color: #f4f5fc;
+  border: none;
+  color: #454746;
+  display: inline-block;
+  flex-grow: 1;
+  font-family: 'Google Sans', Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 36px;
+  margin-left: 10px;
+  outline: none;
+  padding-bottom: 0;
+  padding-right: 20px;
+  padding-top: 0;
+  text-align: left;
+}
+
+.eg-input:active {
+  border: none !important;
+  outline: none !important;
+}
+
+.eg-preview-wrapper {
+  background-color: #fff !important;
+  border: 1px solid #f4f5fc;
+  border-radius: 22px;
+  box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.15);
+  display: none;
+}
+
+.eg-preview-wrapper:hover {
+  box-shadow: 0px 3px 3px 0px rgba(0, 0, 0, 0.25);
+}
+
+.eg-preview-container {
+  border: 1px solid #f4f5fc;
+  border-bottom-left-radius: 22px;
+  border-bottom-right-radius: 22px;
+  border-top: none;
+  box-sizing: border-box;
+  color: rgb(34, 34, 34);
+  font-family: Arial, Helvetica, sans-serif;
+  font-size: 13px;
+  font-weight: normal;
+  line-height: 19.5px;
+  padding: 20px;
+}
+
+.eg-preview-loading-bar {
+  -webkit-animation: AnimationName 2s ease infinite;
+  -moz-animation: AnimationName 2s ease infinite;
+  animation: AnimationName 2s ease infinite;
+  background: linear-gradient(270deg, #ebcbfe, #d2d0f8, #e3dbf4, #d5d2fe);
+  background-size: 800% 800%;
+  height: 6px;
+}
+
+@-webkit-keyframes AnimationName {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@-moz-keyframes AnimationName {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+@keyframes AnimationName {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.eg-preview-loading {
+  align-items: center;
+  display: flex;
+  flex-direction: column;
+  height: 140px;
+  justify-content: center;
+  opacity: 0.5;
+  width: 100%;
+}
+
+.eg-preview-loading p {
+  font-size: 15px;
+  margin: 0 0 40px 0;
+  padding: 0;
+}
+
+.eg-preview-button,
+.eg-streaming-button {
+  border-radius: 18px;
+  cursor: pointer;
+  display: inline-block;
+  font-family: 'Google Sans', Roboto, RobotoDraft, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  font-weight: normal;
+  line-height: 36px;
+  margin-top: 20px;
+  padding-bottom: 0;
+  padding-left: 16px;
+  padding-right: 16px;
+  padding-top: 0;
+  position: relative;
+  text-align: center;
+}
+
+.eg-stream-output {
+  margin: 0;
+}
+
+@keyframes cursor-blink {
+  0% {
+    opacity: 0;
+  }
+}
+
+.eg-stream-output-with-cursor::after {
+  animation: cursor-blink 1s steps(2) infinite;
+  background: #bbbbbb;
+  content: '';
+  display: inline-block;
+  height: 15px;
+  margin-left: 4px;
+  width: 5px;
+}
+
+.eg-stop-generating-button {
+  background-color: #f4f5fc;
+  color: #454746;
+  margin-bottom: 20px;
+  margin-top: 0;
+}
+
+.eg-stop-generating-button:hover {
+  background-color: #e7e9ee;
+}
+
+.eg-stop-generating-button i {
+  margin-right: 10px;
+}
+
+.eg-primary-button {
+  background-color: #0e5ccc;
+  color: #fff;
+}
+
+.eg-primary-button:hover {
+  background-color: #1d65cc;
+}
+
+.eg-preview-cancel-button {
+  background-color: #f4f5fc;
+  color: #454746;
+  margin-left: 10px;
+}
+
+.eg-preview-cancel-button:hover {
+  background-color: #e7e9ee;
+}
+
+.eg-revise-buttons {
+  display: none;
+}
+
+.eg-revise-buttons-disabled .eg-button {
+  cursor: not-allowed;
+  opacity: 0.4;
+  pointer-events: none;
+}
+
+.eg-upgrade-button {
+  background-color: green;
+  border-radius: 22px;
+  color: #fff !important;
+  display: inline-block;
+  font-weight: bold;
+  padding: 10px 20px;
+  text-decoration: none;
+}

@@ -1,0 +1,30 @@
+{
+  "manifest_version": 3,
+  "name": "EmailGenius—ChatGPT for Gmail",
+  "version": "0.0.1.7",
+  "description": "EmailGenius uses ChatGPT to help you write emails.",
+  "icons": {
+    "16": "images/icon-16.png",
+    "32": "images/icon-32.png",
+    "48": "images/icon-48.png",
+    "128": "images/icon-128.png"
+  },
+  "permissions": ["storage", "windows", "tabs"],
+  "background": {
+    "service_worker": "js/background.js"
+  },
+  "content_scripts": [
+    {
+      "js": ["js/lib/jquery-3.7.0.js", "js/content.js"],
+      "css": ["css/global.css"],
+      "matches": [
+        "http://mail.google.com/*",
+        "https://mail.google.com/*",
+        "http://localhost/*",
+        "https://localhost/*",
+        "http://app.emailgenius.app/*",
+        "https://app.emailgenius.app/*"
+      ]
+    }
+  ]
+}
