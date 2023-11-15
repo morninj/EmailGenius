@@ -28,7 +28,7 @@ export async function validateTokenBalance(containerId: string) {
       cancellable: true,
     });
   }
-  if (!user.paidSubscriber && user.remainingCredits < 30) {
+  if (!user.paidSubscriber && user.remainingCredits < 40) {
     showStatusMessage({
       type: 'info',
       message: `You have ${user.remainingCredits} free message${

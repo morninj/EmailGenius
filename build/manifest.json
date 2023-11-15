@@ -1,7 +1,7 @@
 {
   "manifest_version": 3,
   "name": "EmailGenius—ChatGPT for Gmail",
-  "version": "0.0.1.8",
+  "version": "0.0.1.9",
   "description": "EmailGenius uses AI to help you write emails. It’s free, safe, and powerful.",
   "icons": {
     "16": "images/icon-16.png",
