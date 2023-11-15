@@ -30,8 +30,8 @@ __webpack_require__.r(__webpack_exports__);
  * This allows us to use the production back end for the production build and
  * the development back end for the development build.
  */
-const USE_DEV_BACK_END = true;
-const ALLOW_DEBUG_MESSAGES = true;
+const USE_DEV_BACK_END = false;
+const ALLOW_DEBUG_MESSAGES = false;
 // Back-end hosts
 const DEV_BACK_END_HOST = 'http://localhost:3000';
 const PROD_BACK_END_HOST = 'https://app.emailgenius.app';
@@ -1431,7 +1431,8 @@ $(() => {
          * detects a Gmail compose area
          */
         (0,_lib_ui_compose_area__WEBPACK_IMPORTED_MODULE_1__["default"])();
-        /** Grab and save the Chrome extension token from the EmailGenius dashboard;
+        /**
+         * Grab and save the Chrome extension token from the EmailGenius website;
          * this also runs continuously in the background
          */
         await (0,_lib_auth__WEBPACK_IMPORTED_MODULE_0__.listenForTokenActions)();
