@@ -5,7 +5,7 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "reload": "open -g -a \"Google Chrome\" http://reload.extensions/",
+    "reload": "osascript -e 'tell application \"System Events\" to set frontApp to name of first application process whose frontmost is true' -e 'tell application \"Google Chrome\" to open location \"http://reload.extensions\"' -e 'tell application frontApp to activate'",
     "watch": "nodemon --watch 'ts/**/*.ts' -e ts --exec 'npx webpack'",
     "build": "./build.sh"
   },
