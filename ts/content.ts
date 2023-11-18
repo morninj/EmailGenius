@@ -1,7 +1,4 @@
-import {
-  attachLoggedInMessageListener,
-  listenForTokenActions,
-} from './lib/auth';
+import { listenForTokenActions } from './lib/auth';
 import listenForGmailComposeArea from './lib/ui/compose-area';
 import { injectFontAwesome } from './lib/ui/general';
 import attachEventHandlers from './lib/ui/event-handlers';
@@ -30,9 +27,6 @@ $(() => {
 
     // Attach event handlers for UI events
     attachEventHandlers();
-
-    // Attach listener for "logged in" message from the background script
-    attachLoggedInMessageListener();
   }
   initializeExtension();
 });

@@ -30,8 +30,8 @@ __webpack_require__.r(__webpack_exports__);
  * This allows us to use the production back end for the production build and
  * the development back end for the development build.
  */
-const USE_DEV_BACK_END = false;
-const ALLOW_DEBUG_MESSAGES = false;
+const USE_DEV_BACK_END = true;
+const ALLOW_DEBUG_MESSAGES = true;
 // Back-end hosts
 const DEV_BACK_END_HOST = 'http://localhost:3000';
 const PROD_BACK_END_HOST = 'https://app.emailgenius.app';
@@ -133,13 +133,15 @@ async function apiRequest(endpoint, data = {}) {
 
 __webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
-/* harmony export */   attachLoggedInMessageListener: () => (/* binding */ attachLoggedInMessageListener),
 /* harmony export */   authenticationCheck: () => (/* binding */ authenticationCheck),
+/* harmony export */   getFreshLoginFlag: () => (/* binding */ getFreshLoginFlag),
 /* harmony export */   getTokenLocally: () => (/* binding */ getTokenLocally),
 /* harmony export */   isUserLoggedIn: () => (/* binding */ isUserLoggedIn),
 /* harmony export */   listenForTokenActions: () => (/* binding */ listenForTokenActions),
+/* harmony export */   removeFreshLoginFlag: () => (/* binding */ removeFreshLoginFlag),
 /* harmony export */   removeTokenLocally: () => (/* binding */ removeTokenLocally),
 /* harmony export */   saveTokenLocally: () => (/* binding */ saveTokenLocally),
+/* harmony export */   setFreshLoginFlag: () => (/* binding */ setFreshLoginFlag),
 /* harmony export */   showAuthenticationFlow: () => (/* binding */ showAuthenticationFlow),
 /* harmony export */   showLoggedInWelcomeMessage: () => (/* binding */ showLoggedInWelcomeMessage)
 /* harmony export */ });
@@ -169,6 +171,23 @@ async function getTokenLocally() {
 function removeTokenLocally() {
     (0,_debug__WEBPACK_IMPORTED_MODULE_0__["default"])('Removing token from local storage...');
     chrome.storage.local.remove('token');
+}
+// Set a a "fresh login" flag in Chrome local storage
+async function setFreshLoginFlag() {
+    chrome.storage.local.set({ freshLogin: true });
+}
+// Check for a "fresh login" flag in Chrome local storage
+async function getFreshLoginFlag() {
+    return new Promise((resolve) => {
+        chrome.storage.local.get(['freshLogin'], (result) => {
+            resolve(result.freshLogin);
+        });
+    });
+}
+// Remove "fresh login" flag from Chrome local storage
+function removeFreshLoginFlag() {
+    (0,_debug__WEBPACK_IMPORTED_MODULE_0__["default"])('Removing freshLogin from local storage...');
+    chrome.storage.local.remove('freshLogin');
 }
 // Check if the user is logged in by checking for a locally stored token
 async function isUserLoggedIn() {
@@ -205,7 +224,7 @@ function listenForTokenActions() {
         window.location.href.includes(_config__WEBPACK_IMPORTED_MODULE_1__.LOGIN_POPUP_URL)) &&
         !window.location.href.includes(_config__WEBPACK_IMPORTED_MODULE_1__.SIGNED_OUT_URL)) {
         (0,_debug__WEBPACK_IMPORTED_MODULE_0__["default"])('Trying to extract token from page...');
-        setTimeout(function checkForToken() {
+        setTimeout(async function checkForToken() {
             attempts += 1;
             if (attempts < maxAttempts) {
                 // The token will be embedded in an element with id #chrome-extension-token
@@ -214,25 +233,13 @@ function listenForTokenActions() {
                     const token = tokenElement.text();
                     (0,_debug__WEBPACK_IMPORTED_MODULE_0__["default"])(`Token found: ${token}`);
                     saveTokenLocally(token);
-                    // Close the login popup window and show logged-in welcome message
-                    if (window.location.href.includes(_config__WEBPACK_IMPORTED_MODULE_1__.LOGIN_POPUP_URL)) {
-                        /** Show the logged-in welcome message (via the background script)
-                         * This is necessary because this block is getting invoked in the
-                         * popup window, not in the parent tab
-                         */
-                        (0,_debug__WEBPACK_IMPORTED_MODULE_0__["default"])('Showing logged-in welcome message...');
-                        chrome.runtime.sendMessage({ message: 'get_triggering_tab_id' }, (response) => {
-                            const { triggeringTabId } = response;
-                            chrome.runtime.sendMessage({
-                                message: 'send_tab_message',
-                                tabId: triggeringTabId,
-                                data: { message: 'show_logged_in_welcome_message' },
-                            });
-                        });
-                        // Close the login popup window
-                        (0,_debug__WEBPACK_IMPORTED_MODULE_0__["default"])('Closing login popup window...');
-                        chrome.runtime.sendMessage({ message: 'close_window' });
-                    }
+                    /**
+                     * Save a flag indicating that this is a fresh login; this lets us
+                     * displasy a welcome message to new users
+                     */
+                    (0,_debug__WEBPACK_IMPORTED_MODULE_0__["default"])('Setting fresh login flag...');
+                    await setFreshLoginFlag();
+                    (0,_debug__WEBPACK_IMPORTED_MODULE_0__["default"])('Fresh login flag set');
                 }
                 else {
                     (0,_debug__WEBPACK_IMPORTED_MODULE_0__["default"])(`Token not found; trying again (attempt ${attempts} of ${maxAttempts})...`);
@@ -248,20 +255,7 @@ function listenForTokenActions() {
 }
 // Show a popup window and authenticate the user
 function showAuthenticationFlow() {
-    chrome.runtime.sendMessage({
-        message: 'open_new_popup',
-        url: _config__WEBPACK_IMPORTED_MODULE_1__.LOGIN_POPUP_URL,
-    });
-}
-// Listen for the "logged in" message from the background script
-function attachLoggedInMessageListener() {
-    chrome.runtime.onMessage.addListener((request) => {
-        (0,_debug__WEBPACK_IMPORTED_MODULE_0__["default"])(`Received message: ${request.message}`);
-        if (request.message === 'show_logged_in_welcome_message') {
-            (0,_ui_status_message__WEBPACK_IMPORTED_MODULE_2__.clearAllStatusMessages)();
-            showLoggedInWelcomeMessage();
-        }
-    });
+    window.open(_config__WEBPACK_IMPORTED_MODULE_1__.LOGIN_POPUP_URL, '_blank');
 }
 
 
@@ -681,6 +675,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _debug__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ../debug */ "./ts/lib/debug.ts");
 /* harmony import */ var _input_suggestions__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! ./input-suggestions */ "./ts/lib/ui/input-suggestions.ts");
 /* harmony import */ var _auth__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! ../auth */ "./ts/lib/auth.ts");
+/* harmony import */ var _status_message__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! ./status-message */ "./ts/lib/ui/status-message.ts");
+
 
 
 
@@ -857,6 +853,18 @@ function attachEventHandlers() {
     $(document).on('click', '.eg-auth-link', (event) => {
         event.preventDefault();
         (0,_auth__WEBPACK_IMPORTED_MODULE_6__.showAuthenticationFlow)();
+    });
+    // Add event handler for when focus returns to the document
+    $(document).on('focusin', () => {
+        (async () => {
+            // If this is the first time a user has logged in, show the welcome message
+            const freshLogin = await (0,_auth__WEBPACK_IMPORTED_MODULE_6__.getFreshLoginFlag)();
+            if (freshLogin) {
+                (0,_status_message__WEBPACK_IMPORTED_MODULE_7__.clearAllStatusMessages)();
+                (0,_auth__WEBPACK_IMPORTED_MODULE_6__.showLoggedInWelcomeMessage)();
+                (0,_auth__WEBPACK_IMPORTED_MODULE_6__.removeFreshLoginFlag)();
+            }
+        })();
     });
 }
 
@@ -1270,7 +1278,7 @@ async function validateTokenBalance(containerId) {
             cancellable: true,
         });
     }
-    if (!user.paidSubscriber && user.remainingCredits < 30) {
+    if (!user.paidSubscriber && user.remainingCredits < 40) {
         (0,_ui_status_message__WEBPACK_IMPORTED_MODULE_3__.showStatusMessage)({
             type: 'info',
             message: `You have ${user.remainingCredits} free message${user.remainingCredits === 1 ? '' : 's'} left.<br /><br /><a class="eg-upgrade-button" href="${_config__WEBPACK_IMPORTED_MODULE_2__.SUBSCRIPTION_URL}?email=${user.email}" target="_blank">Upgrade for $5/month</a><br /><br />Subscribers get 1000 messages per month. Cancel anytime.`,
@@ -1438,8 +1446,6 @@ $(() => {
         await (0,_lib_auth__WEBPACK_IMPORTED_MODULE_0__.listenForTokenActions)();
         // Attach event handlers for UI events
         (0,_lib_ui_event_handlers__WEBPACK_IMPORTED_MODULE_3__["default"])();
-        // Attach listener for "logged in" message from the background script
-        (0,_lib_auth__WEBPACK_IMPORTED_MODULE_0__.attachLoggedInMessageListener)();
     }
     initializeExtension();
 });

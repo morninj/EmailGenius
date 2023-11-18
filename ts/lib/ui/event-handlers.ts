@@ -9,7 +9,13 @@ import { getContainerId } from '../util';
 import { focusOnComposeArea } from './general';
 import debugLog from '../debug';
 import showInputSuggestions from './input-suggestions';
-import { showAuthenticationFlow } from '../auth';
+import {
+  getFreshLoginFlag,
+  removeFreshLoginFlag,
+  showAuthenticationFlow,
+  showLoggedInWelcomeMessage,
+} from '../auth';
+import { clearAllStatusMessages } from './status-message';
 
 // Handle "Edit -> Regenerate" actions
 function processRegenerateAction(containerId: string) {
@@ -158,7 +164,7 @@ export default function attachEventHandlers() {
       .replace(/<p[^>]*>/g, '<div>')
       .replace(/<\/p>/g, '</div>');
 
-    /** 
+    /**
      * Wrap paragraphs in divs and replace "<br><br>" with an empty div
      * (this is necessary for integration with Gmail's message styles)
      */
@@ -206,5 +212,18 @@ export default function attachEventHandlers() {
   $(document).on('click', '.eg-auth-link', (event) => {
     event.preventDefault();
     showAuthenticationFlow();
+  });
+
+  // Add event handler for when focus returns to the document
+  $(document).on('focusin', () => {
+    (async () => {
+      // If this is the first time a user has logged in, show the welcome message
+      const freshLogin = await getFreshLoginFlag();
+      if (freshLogin) {
+        clearAllStatusMessages();
+        showLoggedInWelcomeMessage();
+        removeFreshLoginFlag();
+      }
+    })();
   });
 }

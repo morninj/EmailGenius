@@ -26,6 +26,26 @@ export function removeTokenLocally() {
   chrome.storage.local.remove('token');
 }
 
+// Set a a "fresh login" flag in Chrome local storage
+export async function setFreshLoginFlag() {
+  chrome.storage.local.set({ freshLogin: true });
+}
+
+// Check for a "fresh login" flag in Chrome local storage
+export async function getFreshLoginFlag() {
+  return new Promise((resolve) => {
+    chrome.storage.local.get(['freshLogin'], (result) => {
+      resolve(result.freshLogin);
+    });
+  });
+}
+
+// Remove "fresh login" flag from Chrome local storage
+export function removeFreshLoginFlag() {
+  debugLog('Removing freshLogin from local storage...');
+  chrome.storage.local.remove('freshLogin');
+}
+
 // Check if the user is logged in by checking for a locally stored token
 export async function isUserLoggedIn() {
   const token = await getTokenLocally();
@@ -70,7 +90,7 @@ export function listenForTokenActions() {
   ) {
     debugLog('Trying to extract token from page...');
 
-    setTimeout(function checkForToken() {
+    setTimeout(async function checkForToken() {
       attempts += 1;
       if (attempts < maxAttempts) {
         // The token will be embedded in an element with id #chrome-extension-token
@@ -80,29 +100,13 @@ export function listenForTokenActions() {
           debugLog(`Token found: ${token}`);
           saveTokenLocally(token);
 
-          // Close the login popup window and show logged-in welcome message
-          if (window.location.href.includes(LOGIN_POPUP_URL)) {
-            /** Show the logged-in welcome message (via the background script)
-             * This is necessary because this block is getting invoked in the
-             * popup window, not in the parent tab
-             */
-            debugLog('Showing logged-in welcome message...');
-            chrome.runtime.sendMessage(
-              { message: 'get_triggering_tab_id' },
-              (response) => {
-                const { triggeringTabId } = response;
-                chrome.runtime.sendMessage({
-                  message: 'send_tab_message',
-                  tabId: triggeringTabId,
-                  data: { message: 'show_logged_in_welcome_message' },
-                });
-              },
-            );
-
-            // Close the login popup window
-            debugLog('Closing login popup window...');
-            chrome.runtime.sendMessage({ message: 'close_window' });
-          }
+          /**
+           * Save a flag indicating that this is a fresh login; this lets us
+           * displasy a welcome message to new users
+           */
+          debugLog('Setting fresh login flag...');
+          await setFreshLoginFlag();
+          debugLog('Fresh login flag set');
         } else {
           debugLog(
             `Token not found; trying again (attempt ${attempts} of ${maxAttempts})...`,
@@ -121,19 +125,5 @@ export function listenForTokenActions() {
 
 // Show a popup window and authenticate the user
 export function showAuthenticationFlow() {
-  chrome.runtime.sendMessage({
-    message: 'open_new_popup',
-    url: LOGIN_POPUP_URL,
-  });
-}
-
-// Listen for the "logged in" message from the background script
-export function attachLoggedInMessageListener() {
-  chrome.runtime.onMessage.addListener((request) => {
-    debugLog(`Received message: ${request.message}`);
-    if (request.message === 'show_logged_in_welcome_message') {
-      clearAllStatusMessages();
-      showLoggedInWelcomeMessage();
-    }
-  });
+  window.open(LOGIN_POPUP_URL, '_blank');
 }

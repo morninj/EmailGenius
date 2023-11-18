@@ -7,7 +7,6 @@ module.exports = {
   devtool: 'source-map',
   entry: {
     content: './ts/content.ts',
-    background: './ts/background.ts',
   },
   output: {
     filename: '[name].js',
