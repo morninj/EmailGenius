@@ -1,3 +1,7 @@
+EmailGenius is a browser extension that uses ChatGPT to help write emails: https://www.emailgenius.app/.
+
+This repo contains the code for the extension.
+
 ## Configuration
 
 - Run `pnpm install` to install dependencies.
